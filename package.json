@@ -1,0 +1,25 @@
+{
+  "name": "qvac-pet-personality-namer",
+  "version": "1.0.0",
+  "description": "Enter an animal type and a personality trait, and an on-device AI suggests pet name ideas that fit. No cloud call, no API key.",
+  "type": "module",
+  "main": "src/gui.js",
+  "scripts": {
+    "start": "node src/gui.js",
+    "gui": "node src/gui.js"
+  },
+  "keywords": [
+    "qvac",
+    "on-device-ai",
+    "pet-names",
+    "llm",
+    "offline-ai"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@qvac/sdk": "^0.19.0"
+  },
+  "engines": {
+    "node": ">=22.17"
+  }
+}
