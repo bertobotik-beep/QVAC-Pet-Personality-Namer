@@ -23,10 +23,15 @@ function parseLines(raw) {
     .filter((line) => line.length > 0 && line.length < 30 && !line.includes(" "));
 }
 
+// When no trait is given, `cap(t)` is "" and the first fallback used to be
+// just "bo" — a name with no connection to the animal at all. Fall back to
+// the animal word itself in that case so the name is still grounded in the
+// user's input.
 function fallbackNames(animal, trait) {
   const t = trait ? trait.trim() : "";
   const cap = (w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : "");
-  return [`${cap(t)}bo`, "Biscuit", "Pepper", "Nugget", `Sir ${cap(t) || "Wiggles"}`].filter(Boolean);
+  const base = cap(t) || cap((animal || "").trim()) || "Bud";
+  return [`${base}bo`, "Biscuit", "Pepper", "Nugget", `Sir ${cap(t) || "Wiggles"}`].filter(Boolean);
 }
 
 export async function generatePetNames(modelId, animal, trait) {
