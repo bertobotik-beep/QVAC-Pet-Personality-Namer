@@ -20,7 +20,7 @@ function parseLines(raw) {
         .replace(/^["']|["']$/g, "")
         .trim()
     )
-    .filter((line) => line.length > 0 && line.length < 30 && !line.includes(" "));
+    .filter((line) => line.length > 0 && line.length < 30 && line.split(/\s+/).length <= 3);
 }
 
 // When no trait is given, `cap(t)` is "" and the first fallback used to be
@@ -28,10 +28,15 @@ function parseLines(raw) {
 // the animal word itself in that case so the name is still grounded in the
 // user's input.
 function fallbackNames(animal, trait) {
-  const t = trait ? trait.trim() : "";
   const cap = (w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : "");
-  const base = cap(t) || cap((animal || "").trim()) || "Bud";
-  return [`${base}bo`, "Biscuit", "Pepper", "Nugget", `Sir ${cap(t) || "Wiggles"}`].filter(Boolean);
+  // Use only the first word of a multi-word trait/animal string, since the
+  // fallback names glue this onto suffixes like "bo" — using the full phrase
+  // produced garbled results like "Lazy and dramaticbo" for "lazy and dramatic".
+  const firstWord = (s) => (s ? s.trim().split(/\s+/)[0] : "");
+  const t = cap(firstWord(trait));
+  const a = cap(firstWord(animal));
+  const base = t || a || "Bud";
+  return [`${base}bo`, "Biscuit", "Pepper", "Nugget", `Sir ${t || "Wiggles"}`].filter(Boolean);
 }
 
 export async function generatePetNames(modelId, animal, trait) {
